@@ -2,7 +2,9 @@ import React from 'react'
 
 const App = () => {
   return (
-    <div>Custom-RAG</div>
+    <div
+    className='m-10'
+    >Custom-RAG</div>
   )
 }
 
