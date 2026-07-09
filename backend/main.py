@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.loader import load_documents
+from app.splitter import split_documents
 
 app = FastAPI()
 
@@ -29,3 +30,31 @@ def get_documents():
         )
 
     return result
+
+
+@app.get("/chunks")
+def get_chunks():
+
+    documents = load_documents("data/default")
+
+    chunks = split_documents(documents)
+
+    result = []
+
+    for index, chunk in enumerate(chunks):
+
+        result.append(
+            {
+                "chunk_number": index + 1,
+                "source": chunk.metadata.get("source"),
+                "page": chunk.metadata.get("page"),
+                "characters": len(chunk.page_content),
+                "preview": chunk.page_content[:200]
+            }   
+        )
+
+    return {                                
+        "total_documents": len(documents),
+        "total_chunks": len(chunks),
+        "chunks": result
+    }
