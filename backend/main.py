@@ -12,7 +12,7 @@ def home():
 
 @app.get("/documents")
 def get_documents():
-
+   
     documents = load_documents("data/default")
 
     result = [] 
@@ -20,6 +20,7 @@ def get_documents():
     for doc in documents:
         result.append(
             {
+ 
                 "source": doc.metadata.get("source"),
                 "page": doc.metadata.get("page"),
                 "characters": len(doc.page_content),

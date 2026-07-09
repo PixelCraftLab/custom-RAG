@@ -6,6 +6,6 @@ const App = () => {
     className='m-10'
     >Custom-RAG</div>
   )
-}
+}             
 
 export default App
