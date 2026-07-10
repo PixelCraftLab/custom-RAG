@@ -37,12 +37,12 @@ def get_chunks():
 
     documents = load_documents("data/default")
 
-    chunks = split_documents(documents)
+    chunks = split_documents(documents)  
 
     result = []
 
-    for index, chunk in enumerate(chunks):
-
+    for index, chunk in enumerate(chunks): 
+                          
         result.append(
             {
                 "chunk_number": index + 1,
