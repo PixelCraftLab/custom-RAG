@@ -42,4 +42,32 @@ def generate_answer(
 
     )
 
+    prompt = SYSTEM_PROMPT.format(
+    context=context,
+    question=question,
+    )
+
+
+
+    response = client.responses.create(
+    model="gpt-4.1-mini",
+    input=prompt,
+    )
+
+    answer = response.output_text
+
+
+    sources = [
+    {
+        "source": document.metadata.get("source"),
+        "page": document.metadata.get("page"),
+    }
+    for document in relevant_documents
+    ]
+
+    return {
+        "answer": answer,
+        "sources": sources,
+    }
+
     
