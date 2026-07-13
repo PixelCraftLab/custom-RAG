@@ -23,7 +23,7 @@ def generate_answer(
         vector_store=vector_store,
         k=k,
     )
-
+   
     print("\nRetrieved Results:")
     for i, (doc, score) in enumerate(results, start=1):
         print(f"{i}. Score: {score:.4f}")
