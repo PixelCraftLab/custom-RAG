@@ -8,10 +8,8 @@ def main():
     embedding_model = get_embedding_model()
 
     vector_store = load_vector_store(
-    embedding_model=embedding_model
-)
-
-    vector_store = load_vector_store()
+        embedding_model=embedding_model
+    )
 
     print("RAG Chat Test")
     print("Type 'exit' to quit.\n")

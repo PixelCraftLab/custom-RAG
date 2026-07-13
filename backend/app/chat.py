@@ -1,10 +1,12 @@
-from openai import OpenAI
+# from openai import OpenAI
+
+from app.llm import get_llm
 
 from app.prompt import SYSTEM_PROMPT
 from app.retriever import retrieve_documents 
 
 
-client = OpenAI()
+# client = OpenAI()
 
 def generate_answer(
     question: str,
@@ -21,13 +23,19 @@ def generate_answer(
         vector_store=vector_store,
         k=k,
     )
+
+    print("\nRetrieved Results:")
+    for i, (doc, score) in enumerate(results, start=1):
+        print(f"{i}. Score: {score:.4f}")
+        print(doc.page_content[:120])
+        print("-" * 50)
     
 
 
     relevant_documents = [
     document
     for document, score in results
-    if score <= score_threshold
+    # if score <= score_threshold
     ]
 
     if not relevant_documents:
@@ -47,14 +55,13 @@ def generate_answer(
     question=question,
     )
 
+    llm = get_llm()
 
 
-    response = client.responses.create(
-    model="gpt-4.1-mini",
-    input=prompt,
-    )
 
-    answer = response.output_text
+    response = llm.invoke(prompt)
+
+    answer = response.content
 
 
     sources = [
