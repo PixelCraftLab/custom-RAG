@@ -3,6 +3,9 @@ from app.loader import load_documents
 from app.splitter import split_documents
 
 from app.api.chat import router as chat_router
+from app.api.upload import router as upload_router
+
+
 
 app = FastAPI(
     title="Custom RAG API",
@@ -16,6 +19,9 @@ def health():
     return {
         "status": "healthy"
     }
+
+
+app.include_router(upload_router)
 
 @app.get("/")
 def home():
