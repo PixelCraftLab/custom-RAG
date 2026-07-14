@@ -1,19 +1,16 @@
-from app.loader import load_documents
+from app.loader import load_documents, load_document
 from app.splitter import split_documents
 from app.embeddings import get_embedding_model
 from app.vectorstore import create_vector_store
 
 
-def ingest_documents(
-    document_path="data/default",
-    persist_directory="db"
+def _ingest(
+    documents,
+    persist_directory="db",
 ):
     """
-    Complete ingestion pipeline:
-    PDF -> Documents -> Chunks -> Embeddings -> ChromaDB
+    Common ingestion pipeline.
     """
-
-    documents = load_documents(document_path)
 
     chunks = split_documents(documents)
 
@@ -26,3 +23,34 @@ def ingest_documents(
     )
 
     return vector_store
+
+def ingest_documents(
+    document_path="data/default",
+    persist_directory="db"
+):
+    """
+    Ingest all PDFs inside a folder.
+    """
+
+    documents = load_documents(document_path)
+
+    return _ingest(
+        documents,
+        persist_directory,
+    )
+
+
+def ingest_document(
+    file_path,
+    persist_directory="db",
+):
+    """
+    Ingest a single PDF.
+    """
+
+    documents = load_document(file_path)
+
+    return _ingest(
+        documents,
+        persist_directory,
+    )
