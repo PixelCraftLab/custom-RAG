@@ -1,11 +1,9 @@
 import React from 'react'
 
-const App = () => {
-  return (
-    <div
-    className='m-10'
-    >Custom-RAG</div>
-  )
-}             
+import Home from "./pages/Home";
 
-export default App
+function App() {
+  return <Home />;
+}
+
+export default App;
