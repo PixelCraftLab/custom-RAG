@@ -32,3 +32,27 @@ def load_vector_store(
     )
 
     return vector_store
+
+
+
+
+def delete_document_vectors(
+    embedding_model,
+    source: str,
+    persist_directory="db",
+):
+    """
+    Delete all vectors belonging to one document.
+    """
+
+    vector_store = load_vector_store(
+        embedding_model=embedding_model,
+        persist_directory=persist_directory,
+    )
+
+    vector_store.delete(
+        where={
+            "source": source,
+        }
+    )
+    

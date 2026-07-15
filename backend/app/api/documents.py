@@ -2,6 +2,9 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from datetime import datetime
 
+from app.embeddings import get_embedding_model
+from app.vectorstore import delete_document_vectors
+
 router = APIRouter()
 
 UPLOAD_DIRECTORY = Path("data/uploads")
@@ -41,6 +44,13 @@ def delete_document(filename: str):
             status_code=404,
             detail="Document not found."
         )
+
+    embedding_model = get_embedding_model()
+
+    delete_document_vectors(
+        embedding_model=embedding_model,
+        source=str(file_path),
+    )
 
     file_path.unlink()
 
