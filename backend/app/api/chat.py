@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from app.chat import generate_answer
 from app.embeddings import get_embedding_model
@@ -15,7 +16,7 @@ vector_store = load_vector_store(embedding_model)
 def chat(request: ChatRequest):
 
     response = generate_answer(
-        question=request.question,
+        question=request.question, 
         vector_store=vector_store,
     )
 

@@ -4,7 +4,7 @@ from app.splitter import split_documents
 
 from app.api.chat import router as chat_router
 from app.api.upload import router as upload_router
-
+from app.api.documents import router as documents_router
 
 
 app = FastAPI(
@@ -22,6 +22,7 @@ def health():
 
 
 app.include_router(upload_router)
+app.include_router(documents_router)
 
 @app.get("/")
 def home():
@@ -29,25 +30,25 @@ def home():
         "message": "Welcome to Custom RAG API"
     }
 
-@app.get("/documents")
-def get_documents():
+# @app.get("/documents")
+# def get_documents():
    
-    documents = load_documents("data/default")
+#     documents = load_documents("data/default")
 
-    result = [] 
+#     result = [] 
 
-    for doc in documents:
-        result.append(
-            {
+#     for doc in documents:
+#         result.append(
+#             {
  
-                "source": doc.metadata.get("source"),
-                "page": doc.metadata.get("page"),
-                "characters": len(doc.page_content),
-                "preview": doc.page_content[:200]
-            }
-        )
+#                 "source": doc.metadata.get("source"),
+#                 "page": doc.metadata.get("page"),
+#                 "characters": len(doc.page_content),
+#                 "preview": doc.page_content[:200]
+#             }
+#         )
 
-    return result
+#     return result
 
 
 @app.get("/chunks")
