@@ -40,7 +40,7 @@ def generate_answer(
 
     if not relevant_documents:
         return {
-        "answer": "I couldn't find the answer in the uploaded document.",
+        "answer": "Sorry, I couldn't find the answer in the uploaded document. Vishal who built me has strictly grounded me.",
         "sources": [],
         }
     
