@@ -339,6 +339,321 @@ Responsive Mobile View
 
 ---
 
+# 🚀 Getting Started
+
+Follow these steps to run the project locally.
+
+---
+
+# Prerequisites
+
+Make sure you have the following installed:
+
+- Python 3.12+
+- Node.js 20+
+- Git
+- pip
+- npm
+
+---
+
+# 1. Clone the Repository
+
+```bash
+git clone https://github.com/PixelCraftLab/custom-RAG.git
+```
+
+Move into the project directory.
+
+```bash
+cd custom-RAG
+```
+
+---
+
+# 2. Backend Setup
+
+Move to the backend folder.
+
+```bash
+cd backend
+```
+
+Create a virtual environment.
+
+### Windows
+
+```bash
+python -m venv venv
+```
+
+Activate it.
+
+```bash
+venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv venv
+```
+
+Activate it.
+
+```bash
+source venv/bin/activate
+```
+
+Install the required dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 3. Environment Variables
+
+Create a `.env` file inside the **backend** directory.
+
+Example:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+You can obtain a free API key from:
+
+https://console.groq.com/keys
+
+---
+
+# 4. Start the Backend
+
+Run the FastAPI server.
+
+```bash
+uvicorn main:app --reload
+```
+
+Backend will start on
+
+```
+http://127.0.0.1:8000
+```
+
+Swagger Documentation
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# 5. Frontend Setup
+
+Open another terminal.
+
+Move to the frontend folder.
+
+```bash
+cd frontend
+```
+
+Install dependencies.
+
+```bash
+npm install
+```
+
+Start the development server.
+
+```bash
+npm run dev
+```
+
+Frontend runs at
+
+```
+http://localhost:5173
+```
+
+---
+
+# 6. Upload a Document
+
+Open the application in your browser.
+
+Upload one or more PDF documents.
+
+The backend will:
+
+- Read the PDF
+- Split it into chunks
+- Generate embeddings
+- Store embeddings inside ChromaDB
+
+---
+
+# 7. Ask Questions
+
+After ingestion completes, ask questions related to the uploaded document.
+
+Example:
+
+```
+What is Retrieval-Augmented Generation?
+
+Summarize Chapter 3.
+
+What are the key findings?
+
+List the important points.
+```
+
+The application retrieves the most relevant chunks before sending them to the LLM.
+
+---
+
+# Project Structure
+
+```
+custom-RAG
+│
+├── backend
+│
+└── frontend
+```
+
+Run these simultaneously.
+
+Backend
+
+```
+uvicorn main:app --reload
+```
+
+Frontend
+
+```
+npm run dev
+```
+
+---
+
+# Default URLs
+
+Frontend
+
+```
+http://localhost:5173
+```
+
+Backend
+
+```
+http://127.0.0.1:8000
+```
+
+API Documentation
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Troubleshooting
+
+### Backend doesn't start
+
+Ensure the virtual environment is activated.
+
+```bash
+source venv/bin/activate
+```
+
+or
+
+```bash
+venv\Scripts\activate
+```
+
+---
+
+### Missing dependencies
+
+Reinstall them.
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Frontend won't start
+
+Install Node packages.
+
+```bash
+npm install
+```
+
+---
+
+### ChromaDB issues
+
+Delete the existing database and regenerate embeddings.
+
+```bash
+rm -rf db
+```
+
+or (Windows)
+
+```cmd
+rmdir /s db
+```
+
+Then upload the document again.
+
+---
+
+# Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- CSS
+
+### Backend
+
+- FastAPI
+- LangChain
+- ChromaDB
+
+### AI Stack
+
+- BAAI/bge-small-en-v1.5 (Embeddings)
+- Groq API
+- Llama 3.3 70B Versatile
+
+### Vector Database
+
+- ChromaDB
+
+### Language
+
+- Python
+
+### Package Manager
+
+- pip
+- npm
+
 # 🏗️ System Architecture
 
 ```
@@ -855,7 +1170,7 @@ Examples
 - Embeddings → Generates vectors
 - Retriever → Searches vectors
 - Prompt → Builds prompts
-- LLM → Generates answers
+- LLM → Generates answers         
 - API → Handles HTTP requests
 
 This follows the **Single Responsibility Principle (SRP)**, making the codebase easier to test, maintain, and extend.
