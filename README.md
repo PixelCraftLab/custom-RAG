@@ -294,7 +294,7 @@ Chunk Overlap
 # Application Preview
 
 <p align="center">
-  <img src="frontend/public/landingimg.png" width="120"/>
+  <img src="frontend/public/landingimg.png"/>
 </p>
 
 ```
