@@ -11,11 +11,9 @@ function ChatBox({ messages }) {
                                 Welcome to Custom RAG
                             </h2>
 
-                            <p className="text-gray-500">
+                            <p className="text-blue-500">
                                 Upload a PDF and start chatting with it.
-                                OR <br></br>
-                                Ask question about the default document, which is a RAG Docs<br></br>
-                                <span className="text-blue-600">Ex:'Explain RAG'/'what is rag?'</span>
+
                             </p>
                         </div>
                     </div>

@@ -14,4 +14,4 @@ sentence-transformers
 
 pypdf
 
-groq
+groq 
