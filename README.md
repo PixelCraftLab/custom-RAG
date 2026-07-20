@@ -1,7 +1,7 @@
 # 📚 Custom RAG (Retrieval-Augmented Generation)
 
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="120"/>
+  <img src="frontend/public/favicon.png" width="120"/>
 </p>
 
 <h3 align="center">
@@ -291,7 +291,11 @@ Chunk Overlap
 
 ---
 
-# Application 
+# Application Preview
+
+<p align="center">
+  <img src="frontend/public/landingimg.png" width="120"/>
+</p>
 
 ```
 Home Page
