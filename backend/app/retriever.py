@@ -4,8 +4,8 @@ from langchain_core.documents import Document
 def retrieve_documents(
     question: str,
     vector_store,
-    k: int = 4,
-):
+    k: int = 10, 
+): 
     """
     Retrieve the most relevant document chunks
     along with their similarity scores.
@@ -13,7 +13,7 @@ def retrieve_documents(
 
     results = vector_store.similarity_search_with_score(
         query=question,
-        k=k,
+        k=k, 
     )
 
     return results

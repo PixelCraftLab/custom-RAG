@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import ChatBox from "../components/ChatBox";
 import MessageInput from "../components/MessageInput";
+
 
 import {
   sendMessage,
@@ -17,6 +18,56 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [documents, setDocuments] = useState([]);
+  const [conversationMode, setConversationMode] = useState(false);
+  const latestAnswer = useRef("");
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const startListening = () => {
+
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Speech Recognition is not supported.");
+      return;
+    }
+
+    if (!recognitionRef.current) {
+
+      const recognition = new window.webkitSpeechRecognition();
+
+      recognition.lang = "en-US";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        setListening(true);
+      };
+
+      recognition.onresult = (event) => {
+
+        const transcript =
+          event.results[0][0].transcript;
+
+        setListening(false);
+
+        handleSend(transcript, true);
+      };
+
+      recognition.onend = () => {
+        setListening(false);
+      };
+
+      recognition.onerror = () => {
+        setListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+
+    try {
+      recognitionRef.current.start();
+    }
+    catch (e) { }
+  };
 
   const loadDocuments = async () => {
     try {
@@ -30,6 +81,25 @@ function Home() {
   useEffect(() => {
     loadDocuments();
   }, []);
+  useEffect(() => {
+
+    if (conversationMode) {
+
+      setTimeout(() => {
+        startListening();
+      }, 300);
+
+    } else {
+
+      speechSynthesis.cancel();
+
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+
+    }
+
+  }, [conversationMode]);
 
 
   const handleUpload = async (file) => {
@@ -53,7 +123,7 @@ function Home() {
     }
   };
 
-  const handleSend = async (question) => {
+  const handleSend = async (question, fromVoice = false) => {
     setMessages((prev) => [
       ...prev,
       {
@@ -66,6 +136,7 @@ function Home() {
 
     try {
       const response = await sendMessage(question);
+      latestAnswer.current = response.answer;
 
       setMessages((prev) => [
         ...prev,
@@ -75,6 +146,38 @@ function Home() {
           sources: response.sources,
         },
       ]);
+
+      if (conversationMode) {
+
+        speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(response.answer);
+
+        utterance.lang = "en-US";
+        utterance.rate = 1;
+        utterance.pitch = 1;
+
+        utterance.onstart = () => {
+          console.log("Assistant speaking...");
+        };
+
+        utterance.onend = () => {
+
+          console.log("Assistant finished.");
+
+          setTimeout(() => {
+
+            if (conversationMode) {
+              startListening();
+            }
+
+          }, 300);
+
+        };
+
+        speechSynthesis.speak(utterance);
+      }
+
     } catch (error) {
       console.error(error);
 
@@ -105,12 +208,63 @@ function Home() {
           onDelete={handleDelete}
         />
 
+        <div className="flex justify-end h-15 mt-147 p-3">
+          <button
+            onClick={() => setConversationMode(!conversationMode)}
+            className={`px-4 py-2 rounded-lg text-white transition ${conversationMode
+              ? "bg-green-600"
+              : "bg-gray-600"
+              }`}
+          >
+            {conversationMode
+              ? "Conversation ON"
+              : "Conversation OFF"}
+          </button>
+        </div>
+
         <main className="flex-1 flex flex-col">
-          <ChatBox messages={messages} />
+          <ChatBox messages={messages}
+            conversationMode={conversationMode}
+          />
+          {conversationMode && (
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/30">
+
+              <div className="w-36 h-36 rounded-full bg-blue-600 animate-pulse flex items-center justify-center shadow-2xl">
+
+                <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center">
+                  🎤
+                </div>
+
+              </div>
+
+              <h2 className="mt-8 text-3xl font-bold text-white">
+                Conversation Mode
+              </h2>
+
+              <p className="mt-2 text-blue-100">
+                {listening
+                  ? "Listening..."
+                  : loading
+                    ? "Thinking..."
+                    : "Speaking..."}
+              </p>
+
+              <button
+                onClick={() => setConversationMode(false)}
+                className="mt-10 px-8 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold"
+              >
+                End Conversation
+              </button>
+
+            </div>
+          )}
 
           <MessageInput
             onSend={handleSend}
             loading={loading}
+            listening={listening}
+            onMicClick={startListening}
+            conversationMode={conversationMode}
           />
         </main>
       </div>
