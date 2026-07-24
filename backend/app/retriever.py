@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 def retrieve_documents(
     question: str,
     vector_store,
-    k: int = 10, 
+    k: int = 30, 
 ): 
     """
     Retrieve the most relevant document chunks

@@ -136,7 +136,10 @@ function MessageInput({ onSend, loading, listening, onMicClick }) {
 
 
     return (
-        <div className="border-t bg-white p-4">
+        <div className=" bg-white p-4">
+            <div className="text-sm display flex ml-30 text-neutral-400 top-0.5">
+                Custom RAG Assistant can make mistakes. Check important info.
+            </div>
             <div className="max-w-4xl mx-auto flex items-end gap-3">
                 <textarea
                     value={question}
@@ -148,16 +151,18 @@ function MessageInput({ onSend, loading, listening, onMicClick }) {
                     className="flex-1 resize-none rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
+
                 <button
                     onClick={onMicClick}
                     disabled={loading}
                     className={`h-12 w-12 rounded-xl flex items-center justify-center text-white transition ${listening
-                            ? "bg-red-600"
-                            : "bg-green-600 hover:bg-green-700"
+                        ? "bg-red-600"
+                        : "bg-green-600 hover:bg-green-700"
                         }`}
                 >
                     <Mic size={20} />
                 </button>
+
 
                 <button
                     onClick={handleSubmit}
@@ -167,7 +172,9 @@ function MessageInput({ onSend, loading, listening, onMicClick }) {
                     <SendHorizontal size={20} />
                 </button>
 
+
             </div>
+
         </div>
     );
 }
