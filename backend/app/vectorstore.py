@@ -17,6 +17,8 @@ def create_vector_store(
         persist_directory=persist_directory,
     )
 
+    vector_store._all_chunks = chunks
+
     return vector_store 
 
 def load_vector_store(

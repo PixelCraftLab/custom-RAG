@@ -118,12 +118,13 @@ from app.memory import (
     add_retrieved_chunks,
     get_conversation,
 )
+from app.config import DEFAULT_TOP_K, FINAL_CONTEXT_K
 
 
 def generate_answer(
     question: str,
     vector_store,
-    k: int = 5,
+    k: int = DEFAULT_TOP_K,
 ):
     """
     Generate an answer using the retrieved document chunks.
@@ -144,8 +145,8 @@ def generate_answer(
         print("-" * 50)
 
     relevant_documents = [
-        document
-        for document, score in results
+    document
+    for document, score in results[:FINAL_CONTEXT_K]
     ]
 
     if not relevant_documents:

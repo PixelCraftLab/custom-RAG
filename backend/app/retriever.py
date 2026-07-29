@@ -1,19 +1,33 @@
 from langchain_core.documents import Document
-
+from app.config import DEFAULT_TOP_K, MIN_RELEVANCE_SCORE
+from app.hybrid_retriever import hybrid_retrieve
+from app.reranker import rerank
 
 def retrieve_documents(
     question: str,
     vector_store,
-    k: int = 30, 
+    k: int = DEFAULT_TOP_K, 
 ): 
     """
     Retrieve the most relevant document chunks
     along with their similarity scores.
     """
 
-    results = vector_store.similarity_search_with_score(
-        query=question,
+    results = hybrid_retrieve(
+        question=question,
+        vector_store=vector_store,
         k=k, 
     )
+    filtered_results = []
 
-    return results
+    for document, score in results:
+
+        if score <= MIN_RELEVANCE_SCORE:
+            filtered_results.append((document, score))
+
+    reranked_results = rerank(
+    question,
+    filtered_results
+    )
+
+    return reranked_results 

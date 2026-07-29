@@ -79,7 +79,7 @@ Current Question:
 {question}
 
 Instructions:
-- if asked something like "tell me step by step", "how to install", "how to do", do not give the compleate steps all at a time rather just give the first step and ask the user tell done once he finishe the given step.
+- if asked something like "tell me step by step", "how to install", "how to do", do not give the compleate steps all at a time rather just give the first step and ask the user tell done once he finishe the given step and once all the steps are done reply with "you are all done with the steps"
 - If the user says "done", "compleated", "what next", "ok", "continue", "Next", "fine", "finished", refer to the whold conversation and document context history and tell the user what exactly to do next, do not repeate any step until asked by the user to do.
 - Use the conversation history to understand follow-up questions.
 - If the user says things like "it", "he", "that", "the previous one", "above", "you told", "You tell", "you", infer the meaning from the conversation history.

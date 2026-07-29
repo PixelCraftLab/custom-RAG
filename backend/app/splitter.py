@@ -18,17 +18,17 @@ def split_documents(documents):
     for index, chunk in enumerate(chunks):
 
 
-        metadata = chunk.metadata.copy() 
+        chunk.metadata["chunk_index"] = index
 
-        metadata.update({
-            "chunk_id": f"{metadata.get('source', 'doc')}_{index}",
-            "chunk_index": index,
-            "total_chunks": total_chunks,
-            "char_count": len(chunk.page_content),
-            "token_estimate": len(chunk.page_content) // 4,
-        })
+        chunk.metadata["total_chunks"] = total_chunks
 
-        chunk.metadata = metadata
+        chunk.metadata["chunk_id"] = (
+            f"{chunk.metadata.get('source')}_{index}"
+        )
 
-    return chunks 
+        chunk.metadata["token_estimate"] = (
+            len(chunk.page_content) // 4
+        )
+
+    return chunks  
 
