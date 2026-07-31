@@ -64,16 +64,20 @@ This project demonstrates how modern AI applications are built in production env
 
 ---
 
-## ✂️ Intelligent Chunking
+---
 
-Uses LangChain's RecursiveCharacterTextSplitter.
+## ✂️ Semantic Chunking
 
-Configuration:
+Uses LangChain's **SemanticChunker** with Hugging Face embeddings to split documents based on **semantic meaning** instead of fixed-size chunks.
 
-- Chunk Size: **1000**
-- Chunk Overlap: **200**
+**Configuration:**
 
-This preserves context while maximizing retrieval accuracy.
+- Chunking Strategy: **Semantic Chunking**
+- Embedding Model: **Hugging Face Embeddings**
+- Breakpoint Threshold Type: **Percentile**
+- Breakpoint Threshold Value: **80th Percentile**
+
+This creates context-aware chunks by identifying natural topic boundaries, preserving complete ideas and improving retrieval accuracy for downstream RAG tasks.
 
 ---
 
@@ -112,15 +116,18 @@ The database persists on disk, eliminating the need to regenerate embeddings eve
 
 ---
 
-## 🔍 Semantic Search
+## 🔍 Hybrid Retrieval
 
-Instead of keyword matching, the system performs vector similarity search.
+The application combines **semantic vector search** with **BM25 keyword search** to improve retrieval quality.
 
-Current retrieval configuration:
+**Retrieval Pipeline:**
 
-- Top K = **4**
+- Semantic Search (ChromaDB + Hugging Face Embeddings)
+- BM25 Keyword Search
+- Reciprocal Rank Fusion (RRF)
+- Top K Retrieval = **4**
 
-This retrieves the four most relevant chunks for every question.
+This hybrid approach combines semantic understanding with exact keyword matching, improving recall and retrieval accuracy across a wide range of queries.
 
 ---
 
@@ -186,6 +193,13 @@ Features include
 - Message History
 - Source Attribution
 - Responsive Layout
+
+## 🔍 Hybrid Retrieval
+
+- Semantic Vector Search
+- BM25 Keyword Search
+- Reciprocal Rank Fusion (RRF)
+- Top-K Context Retrieval
 
 ---
 
@@ -267,27 +281,26 @@ Metadata Filtering
 
 ### Retrieval
 
-Top K Retrieval
+**Hybrid Retrieval**
 
-```
-k = 4
-```
+Configuration
+
+- Semantic Vector Search (ChromaDB)
+- BM25 Keyword Search
+- Reciprocal Rank Fusion (RRF)
+- Top K = **4**
 
 ---
 
 ### Chunking Strategy
 
-Chunk Size
+Semantic Chunking
 
-```
-1000
-```
+Configuration
 
-Chunk Overlap
-
-```
-200
-```
+- Chunking Strategy: **Semantic Chunking**
+- Breakpoint Threshold Type: **Percentile**
+- Breakpoint Threshold Value: **80th Percentile**
 
 ---
 
@@ -336,6 +349,12 @@ Responsive Mobile View
 ✔ Single Responsibility Principle
 
 ✔ Separation of Concerns
+
+✔ Semantic Chunking
+
+✔ Hybrid Retrieval (Semantic Search + BM25)
+
+✔ Reciprocal Rank Fusion (RRF)
 
 ---
 
@@ -683,9 +702,19 @@ Then upload the document again.
       Document Loader         Chroma Vector Store
              |                       |
              ▼                       ▼
-      Text Chunking          Similarity Search
-             |                       |
-             +-----------+-----------+
+      Semantic Chunking          Hybrid Retrieval
+             |                       │
+             |                    ──────────────
+             |                   │              │
+             |                   ▼              ▼
+             |               ChromaDB         BM25 Index
+             |                   │              │
+             |                   └──────┬───────┘
+             |                          ▼
+             |                         RRF
+             |                          │
+             |                          ▼
+             +-----------+--------------+
                          |
                          ▼
                 Retrieved Chunks
@@ -755,76 +784,31 @@ Metadata is preserved throughout the pipeline for source attribution.
 
 ---
 
-## Step 3 — Chunking
+# Step 3 — Semantic Chunking
 
 Large Language Models cannot efficiently process entire PDFs.
 
-Instead, each document is divided into smaller overlapping chunks.
+Instead of splitting documents into fixed-size chunks, the application uses **SemanticChunker** to identify natural topic boundaries using embedding similarity.
 
 Configuration
 
 ```python
-chunk_size = 1000
-
-chunk_overlap = 200
+SemanticChunker(
+    embeddings=embeddings,
+    breakpoint_threshold_type="percentile",
+    breakpoint_threshold_amount=80,
+)
 ```
 
-Example
+The chunker:
 
-```
-Document
+1. Splits the document into sentences.
+2. Generates embeddings for each sentence.
+3. Measures semantic similarity between consecutive sentences.
+4. Creates a new chunk when a significant topic change is detected.
 
-Page 1
------------------------------------------------------
+This produces context-aware chunks that preserve complete ideas instead of relying on arbitrary character limits.
 
-Chunk 1
-
-Lorem ipsum...
-
--------------------------
-
-Chunk 2
-
-(previous 200 characters)
-
--------------------------
-
-Chunk 3
-
-(previous overlap)
-
-...
-```
-
-### Why overlap?
-
-Without overlap
-
-```
-Chunk 1
-
-The capital of France
-
-Chunk 2
-
-is Paris
-```
-
-The meaning is lost.
-
-With overlap
-
-```
-Chunk 1
-
-The capital of France
-
-Chunk 2
-
-France is Paris
-```
-
-Context is preserved.
 
 ---
 
@@ -1062,7 +1046,7 @@ User Uploads PDF
 Load PDF
         │
         ▼
-Split into Chunks
+Semantic Chunking
         │
         ▼
 Generate Embeddings
@@ -1078,10 +1062,15 @@ User asks Question
         ▼
 Embed Question
         │
-        ▼
-Similarity Search
-        │
-        ▼
+        ├─────────────┐
+        ▼             ▼
+Semantic Search     BM25 Search
+        │             │
+        └──────┬──────┘
+               ▼
+             RRF
+               │
+               ▼
 Top 4 Chunks
         │
         ▼
@@ -1114,7 +1103,7 @@ LangChain Document
 
 ↓
 
-RecursiveCharacterTextSplitter
+SemanticChunker
 
 ↓
 
@@ -1131,10 +1120,17 @@ Vectors
 ↓
 
 ChromaDB
-
-↓
-
-Retriever
+        │
+        ├──────────────┐
+        │              │
+        ▼              ▼
+Semantic Search     BM25 Search
+        │              │
+        └──────┬───────┘
+               ▼
+      Reciprocal Rank Fusion
+               │
+               ▼
 
 ↓
 
@@ -1187,5 +1183,6 @@ This follows the **Single Responsibility Principle (SRP)**, making the codebase 
 - Clean API boundaries
 - Ready for cloud deployment
 - Easy to scale into a multi-user RAG system
+- Hybrid retrieval improves recall by combining semantic similarity with keyword matching
 
 ---

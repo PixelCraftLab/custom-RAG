@@ -13,7 +13,7 @@ function Navbar({ onMenuClick }) {
 
                 <h1 className="text-lg md:text-2xl font-bold">
                     Custom RAG Assistant
-                    <span className="text-sm text-neutral-500"> version=3.2.1</span>
+                    <span className="text-sm text-neutral-500"> version=3.2.2</span>
                 </h1>
             </div>
 
