@@ -1,4 +1,45 @@
+# from sentence_transformers import CrossEncoder
+# from app.config import RERANK_TOP_K
+
+# reranker = CrossEncoder(
+#     "BAAI/bge-reranker-base"
+# )
+
+
+# def rerank(question, retrieved_results):
+#     """
+#     retrieved_results:
+#         List[(Document, score)]
+
+#     Returns:
+#         Reranked List[(Document, rerank_score)]
+#     """
+
+#     if not retrieved_results:
+#         return []
+
+#     pairs = [
+#         (question, doc.page_content)
+#         for doc, _ in retrieved_results
+#     ]
+
+#     scores = reranker.predict(pairs)
+
+#     reranked = []
+
+#     for (doc, _), score in zip(retrieved_results, scores):
+#         reranked.append((doc, float(score)))
+
+#     reranked.sort(
+#         key=lambda x: x[1],
+#         reverse=True
+#     )
+
+#     return reranked[:RERANK_TOP_K]
+
+
 from sentence_transformers import CrossEncoder
+
 from app.config import RERANK_TOP_K
 
 reranker = CrossEncoder(
@@ -6,33 +47,33 @@ reranker = CrossEncoder(
 )
 
 
-def rerank(question, retrieved_results):
+def rerank(question, documents):
     """
-    retrieved_results:
-        List[(Document, score)]
+    documents:
+        List[Document]
 
     Returns:
-        Reranked List[(Document, rerank_score)]
+        List[(Document, rerank_score)]
     """
 
-    if not retrieved_results:
+    if not documents:
         return []
 
     pairs = [
         (question, doc.page_content)
-        for doc, _ in retrieved_results
+        for doc in documents
     ]
 
     scores = reranker.predict(pairs)
 
-    reranked = []
-
-    for (doc, _), score in zip(retrieved_results, scores):
-        reranked.append((doc, float(score)))
+    reranked = [
+        (doc, float(score))
+        for doc, score in zip(documents, scores)
+    ]
 
     reranked.sort(
         key=lambda x: x[1],
-        reverse=True
+        reverse=True,
     )
 
     return reranked[:RERANK_TOP_K]

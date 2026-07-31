@@ -2,6 +2,8 @@ from app.loader import load_documents, load_document
 from app.splitter import split_documents
 from app.embeddings import get_embedding_model
 from app.vectorstore import create_vector_store
+from app.bm25 import BM25Retriever
+import pickle
 
 
 def _ingest(
@@ -13,6 +15,13 @@ def _ingest(
     """
 
     chunks = split_documents(documents)
+
+    bm25 = BM25Retriever(chunks)
+
+    with open("data/bm25.pkl", "wb") as f:
+        pickle.dump(bm25, f)
+
+    print("BM25 index created")
 
     embedding_model = get_embedding_model()
 

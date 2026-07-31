@@ -11,3 +11,4 @@ EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 
 COLLECTION_NAME = "documents"
 
+BM25_TOP_K = 30
