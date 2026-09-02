@@ -40,7 +40,7 @@ from app.reranker import rerank
 
 def retrieve_documents(
     question: str,
-    vector_store,
+
     k: int = DEFAULT_TOP_K,
 ):
     """
@@ -49,7 +49,7 @@ def retrieve_documents(
 
     documents = hybrid_retrieve(
         question=question,
-        vector_store=vector_store,
+
         k=k,
     )
 

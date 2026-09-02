@@ -16,12 +16,12 @@ def split_documents(documents):
         breakpoint_threshold_amount=80,
     )
 
-    chunks = splitter.split_documents(documents)
-
+    chunks = splitter.split_documents(documents)  
+ 
     print(f"Total chunks: {len(chunks)}") 
 
     for i, chunk in enumerate(chunks[:3]):
-        print(f"\n----- Chunk {i+1} -----") 
+        print(f"\n----- Chunk {i+1} -----")  
         print(chunk.page_content[:500])
 
     total_chunks = len(chunks) 
@@ -41,5 +41,5 @@ def split_documents(documents):
             len(chunk.page_content) // 4
         )
 
-    return chunks   
+    return chunks    
 

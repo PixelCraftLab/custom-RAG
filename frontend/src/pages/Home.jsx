@@ -15,6 +15,7 @@ import {
 
 function Home() {
   const [messages, setMessages] = useState([]);
+  const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [documents, setDocuments] = useState([]);
@@ -135,7 +136,8 @@ function Home() {
     setLoading(true);
 
     try {
-      const response = await sendMessage(question);
+      const response = await sendMessage(question, conversationId);
+      setConversationId(response.conversation_id);
       latestAnswer.current = response.answer;
 
       setMessages((prev) => [

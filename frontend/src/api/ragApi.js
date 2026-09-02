@@ -10,8 +10,9 @@ export async function uploadPDF(file) {
 }
 
 
-export async function sendMessage(question) {
+export async function sendMessage(question, conversationId=null) {
   const response = await api.post("/chat", {
+    conversation_id: conversationId,
     question,
   });
 

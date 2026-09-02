@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.loader import load_documents
-from app.splitter import split_documents
+# from app.loader import load_documents
+# from app.splitter import split_documents
 
 from app.api.chat import router as chat_router
 from app.api.upload import router as upload_router
@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Custom RAG API",
-    version="1.0.0",
+    version="5.2.3",
 )
 
 app.add_middleware(
@@ -40,29 +40,29 @@ def home():
     }
 
 
-@app.get("/chunks")
-def get_chunks():
+# @app.get("/chunks")
+# def get_chunks():
 
-    documents = load_documents("data/default")
+#     documents = load_documents("data/default")
 
-    chunks = split_documents(documents)  
+#     chunks = split_documents(documents)  
 
-    result = []
+#     result = []
 
-    for index, chunk in enumerate(chunks): 
+#     for index, chunk in enumerate(chunks): 
                           
-        result.append(
-            {
-                "chunk_number": index + 1,
-                "source": chunk.metadata.get("source"),
-                "page": chunk.metadata.get("page"),
-                "characters": len(chunk.page_content),
-                "preview": chunk.page_content[:200]
-            }   
-        )
+#         result.append(
+#             {
+#                 "chunk_number": index + 1,
+#                 "source": chunk.metadata.get("source"),
+#                 "page": chunk.metadata.get("page"),
+#                 "characters": len(chunk.page_content),
+#                 "preview": chunk.page_content[:200]
+#             }   
+#         )
 
-    return {                                
-        "total_documents": len(documents),
-        "total_chunks": len(chunks),
-        "chunks": result
-    }
+#     return {                                
+#         "total_documents": len(documents),
+#         "total_chunks": len(chunks),
+#         "chunks": result
+#     }

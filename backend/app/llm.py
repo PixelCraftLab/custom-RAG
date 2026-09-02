@@ -16,7 +16,7 @@ load_dotenv()
 #         temperature=0,
 #     )
 
-#     return llm 
+#     return llm  
 
 
 def get_llm():
@@ -25,9 +25,10 @@ def get_llm():
     """
 
     llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b", 
         # model="llama-3.1-8b-instant",  
-        temperature=0,
+        temperature=0,  
     )
 
-    return llm 
+    return llm   
+

@@ -5,16 +5,19 @@ from app.rrf import reciprocal_rank_fusion
 
 def hybrid_retrieve(
     question: str,
-    vector_store,
+
     k: int,
 ):
     dense_results = vector_search(
         question=question,
-        vector_store=vector_store,
+
         k=k,
     )
 
     bm25 = load_bm25()
+
+    if bm25 is None:
+        return dense_results[:k]
 
     bm25_results = bm25.search( 
         question,
@@ -26,4 +29,4 @@ def hybrid_retrieve(
         bm25_results,
     )
 
-    return fused_results[:k]
+    return fused_results[:k] 

@@ -1,8 +1,9 @@
 from pydantic import BaseModel
-
+from uuid import UUID
 
 class ChatRequest(BaseModel):
     question: str
+    conversation_id: UUID | None = None
 
 
 class Source(BaseModel):
@@ -13,5 +14,6 @@ class Source(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     sources: list[Source]
+    conversation_id: UUID
 
     
